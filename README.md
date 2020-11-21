@@ -60,7 +60,7 @@ In general:
 ## System Commands
 
 ### **echo**
-#### *Echo To Output*
+#### **Echo To Output**
 
 Repeat whatever follows the echo command.
 
@@ -70,7 +70,7 @@ Repeat whatever follows the echo command.
 --- 
 
 ### **rem (;)**
-#### *Comment*
+#### **Comment**
 
 Ignore anything following "rem" or ";", including in the middle of a command.
 
@@ -84,14 +84,14 @@ Ignore anything following "rem" or ";", including in the middle of a command.
 ## LED Commands
 
 ### **A0**
-#### *Device Information*
+#### **Device Information**
 
 Return information about the device and its LEDs in a series of echo responses.  
 
 ---
 
 ### **A1**
-#### *Set Color*
+#### **Set Color**
 
 Set the color of a specific LED or group of LEDs.
 
@@ -110,7 +110,7 @@ Set the color of a specific LED or group of LEDs.
 
 ---
 ### **A2**
-#### *Modify Color*
+#### **Modify Color**
 
 Modify the existing color by math translation of the existing colors on specific LEDs.  This differs from [A1](#markdown-header-a1) in modifying existing colors, rather than setting new colors with no regard for the previous settings.
 
@@ -128,7 +128,7 @@ Modify the existing color by math translation of the existing colors on specific
 
 --- 
 ### **A997**
-#### *Set Default Color*  
+#### **Set Default Color**  
 Set the default color, similar to setting an LED's color ([A1](#markdown-header-a1)).
 
 ***Variables***  
@@ -136,13 +136,13 @@ Set the default color, similar to setting an LED's color ([A1](#markdown-header-
 
 --- 
 ### **A998**
-**Reset**
+#### **Reset**
 
 Reset all LEDs and configurable settings to their defaults, defined in each code's specification.
 
 ---
 ### **A999**
-#### *Abort*
+#### **Abort**
 
 Complete abort and shutdown of all LED activity immediately.  This should entail some or all of the following:
 
