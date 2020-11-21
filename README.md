@@ -37,9 +37,7 @@ In general, HTML trumps RGB which trumps HSV; check the individual command for a
 `A1 H0 S128 V255`  
 
 ### Color Translation
-This is similar to [Color Specification](#markdown-header-color-specification), except that each value may be expressed as a positive or negative value.  If the sign is omitted, the change is assumed to be positive.  
-
-Translations 
+This is similar to [Color Specification](#markdown-header-color-specification), except that each value may be expressed as a positive or negative value.  If the sign is omitted, the change is assumed to be positive.   
 
 In general, only RGB or HSV changes make sense; specifying HTML via X will either throw a warning, an error, or be assumed to instead mean setting the color instead of changing it; check the individual command for any possible differences.
 
@@ -55,7 +53,7 @@ In general:
 * If only S is specified, *only* the LED at index S is affected.
 * If only E is specified, *all* LEDs *up to and including* the LED at index E is affected.
 * If neither S or E is specified, *all* LEDs are affected.
-* If S is greater than E, a warning response code is generated and the values treated in reverse (E to S).  This can lead to unexpected results for any commands with gradual changes to multiple LEDs.
+* If S is greater than E, a warning is echoed and the values treated in reverse (E to S).  This can lead to unexpected results for any commands with gradual changes to multiple LEDs.
 
 ---
 
@@ -74,7 +72,7 @@ Repeat whatever follows the echo command.
 ### **rem (;)**
 #### *Comment*
 
-Ignore anything following rem or ;, including in the middle of a command.
+Ignore anything following "rem" or ";", including in the middle of a command.
 
 ***Examples***  
 `rem This is a comment`  
@@ -122,7 +120,7 @@ Modify the existing color by math translation of the existing colors on specific
 
 ***Notes***   
 * If settings from multiple color specifications are specified, they will be applied in the order listed above.
-* Attempting to specify an HTML color code via X will throw E03.
+* Attempting to specify an HTML color code via X will fail with an error echo.
 * If no color has been set yet, the default color ([A997](#markdown-header-a997)) will be used as a base.
 
 ***Examples***  
@@ -152,28 +150,17 @@ Complete abort and shutdown of all LED activity immediately.  This should entail
 * All LEDs set to the lowest possible brightness and power output
 * All power to lights cut off
 
-
 ---
 
-## Response Codes
+## Responses
 
-The prefix of the response codes to each command gives the severity of the code in question.
+Similar to RepRap and G-code, responses are pretty standardized:
 
-**R**: Standard responses to commands  
-**W**: Warnings; these normally should not stop operation  
-**E**: Errors; something went wrong that should stop operation.
-
-For ease of parsing, all codes will work across all prefixes; however, some combinations will have no obvious use.  (For example, a code of R01 would be an out of bounds OK, which makes no logical sense.)
-
-In general, warnings are recoverable; errors aren't.
-
-Each response can also have an accompanying text string after with more information.
-
-### *R00* ###
-This is the standard "OK" response from most immediate commands.  
-### *E01* ###
-Syntax error - more than likely, erroneous commands.
-### *W02*/*E02* ###
-Out of bounds.
-### *E03* ###
-Type mismatch (usually specifying HTML values in a translation)  
+### **ok**
+The device is ready for its next command.
+### **!!**
+A fatal error has occurred; next steps will depend on the device in question, but usually require a reset of either the device, the client, or both.
+### **wait**
+This is sent as a keep-alive if no commands are received within a certain interval after ok.
+### **busy:**
+The device is busy and cannot receive or process commands from a client at this time.  Any known reasons for the busy status follow the colon in the response.
