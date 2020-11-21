@@ -12,7 +12,7 @@ This is for the hopefully-temporary aLEDp, which is *A*ria's *LED* *p*rotocol.  
 
 ## Variable Types
 
-### Colors
+### Colors 
 This is a color specified by one or more of the following color specifications.  Most commands that involve color involve setting the values for one of these:
 
 **HTML**
