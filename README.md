@@ -57,12 +57,38 @@ In general:
 * If neither S or E is specified, *all* LEDs are affected.
 * If S is greater than E, a warning response code is generated and the values treated in reverse (E to S).  This can lead to unexpected results for any commands with gradual changes to multiple LEDs.
 
-## Commands
+---
+
+## System Commands
+
+### **echo**
+#### *Echo To Output*
+
+Repeat whatever follows the echo command.
+
+***Examples***  
+`echo Hello! ; returns "echo: Hello!"`  
+
+--- 
+
+### **rem (;)**
+#### *Comment*
+
+Ignore anything following rem or ;, including in the middle of a command.
+
+***Examples***  
+`rem This is a comment`  
+`A1 X00FF00 ; Set all LEDs to green`  
+`A1 R255 G255 ; B255 - this will only set RG, since B is in the comment`  
+
+---
+
+## LED Commands
 
 ### **A0**
 #### *Device Information*
 
-Return information about the device and its LEDs.
+Return information about the device and its LEDs in a series of echo responses.  
 
 ---
 
@@ -77,7 +103,7 @@ Set the color of a specific LED or group of LEDs.
 
 ***Notes***
 * If settings from multiple color specifications are specified, they will be applied in the order listed above.
-* If no color is specified, the default color ([A997](#markdown-header-A997)) is used.  
+* If no color is specified, the default color ([A997](#markdown-header-a997)) is used.  
 
 ***Examples***  
 `A1 X00FF00 ; Set all LEDs to green`  
@@ -97,6 +123,7 @@ Modify the existing color by math translation of the existing colors on specific
 ***Notes***   
 * If settings from multiple color specifications are specified, they will be applied in the order listed above.
 * Attempting to specify an HTML color code via X will throw E03.
+* If no color has been set yet, the default color ([A997](#markdown-header-a997)) will be used as a base.
 
 ***Examples***  
 `A2 V-100 ; Dim all of the LEDs`  
