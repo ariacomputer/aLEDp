@@ -5,17 +5,44 @@
 */
 
 #include "aLEDp_ColorSpecification.h"
+#include <FastLED.h>
 
-const int keepAliveInterval = 2000;
-unsigned long lastKeepAlive = 0;
-aLEDp_ColorSpecification defaultColor;
+// HARDWARE
+// The LED hardware
+#define NUM_LEDS		24
+#define DATA_PIN		6
+//#define CLOCK_PIN		13
+#define LED_TYPE		NEOPIXEL
+//#define RGB_ORDER		GRB
+//#define SPI_DATA_RATE	DATA_RATE_MHZ(12)
+
+// DEFAULT SETTINGS
+// Keep alive in ms
+int _keepAliveInterval = 2000;
+// Default color
+aLEDp_ColorSpecification _defaultColor;
+
+// LOOP STORAGE
+// Keep alive
+unsigned long _lastKeepAlive = 0;
+
+// Arrays to store the LED information
+aLEDp_ColorSpecification _LEDs[NUM_LEDS];
+CRGB _FastLED[NUM_LEDS];
 
 // the setup function runs once when you press reset or power the board
 void setup() {
+	// Initialize FastLED
+
+	FastLED.addLeds<LED_TYPE, DATA_PIN>(_FastLED, NUM_LEDS);
 	// Define the default color
-	defaultColor.red(0);
-	defaultColor.green(0);
-	defaultColor.blue(0);
+	_defaultColor.red(0);
+	_defaultColor.green(0);
+	_defaultColor.blue(255);
+	// Initialize the LEDs
+	for (int x = 0; x < NUM_LEDS; x++) {
+		set_led_color(x, _defaultColor);
+	}
 	// Open serial port
 	Serial.begin(115200);
 	Serial.println("ok aLEDp READY.");
@@ -27,8 +54,34 @@ void loop() {
 }
 
 void check_keep_alive() {
-	if (millis() - lastKeepAlive >= keepAliveInterval) {
-		lastKeepAlive += keepAliveInterval;
+	if (millis() - _lastKeepAlive >= _keepAliveInterval) {
+		_lastKeepAlive += _keepAliveInterval;
 		Serial.println("ok PING!");
 	}
+}
+
+int set_led_color(int color_index, aLEDp_ColorSpecification color) {
+	// Ensure the proper index
+	if (color_index < 0 || color_index >= NUM_LEDS) {
+		return 0;
+	}
+	// TODO: Implement proper HSV and RGB controls
+	if (color.red() != -1) {
+		_FastLED[color_index].red = color.red();
+	}
+	if (color.green() != -1) {
+		_FastLED[color_index].green = color.green();
+	}
+	if (color.blue() != -1) {
+		_FastLED[color_index].blue = color.blue();
+	}
+	// Since HSV is handled differently, we have to do a full color.
+	if (color.hue() != -1 && color.saturation() != -1 && color.brightness() != -1) {
+		_FastLED[color_index].setHSV(color.hue(), color.saturation(), color.brightness());
+	}
+
+	FastLED.show();
+	// Update the array
+	_LEDs[color_index] = color;
+	return 1;
 }
