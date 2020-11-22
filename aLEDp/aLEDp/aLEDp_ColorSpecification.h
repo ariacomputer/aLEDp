@@ -12,17 +12,11 @@
 class aLEDp_ColorSpecification {
 public:
 	aLEDp_ColorSpecification();
-	int red(void);
 	int red(int value);
-	int green(void);
 	int green(int value);
-	int blue(void);
 	int blue(int value);
-	int hue(void);
 	int hue(int value);
-	int saturation(void);
 	int saturation(int value);
-	int brightness(void);
 	int brightness(int value);
 	// TODO: Specify an HTML color code
 private:
