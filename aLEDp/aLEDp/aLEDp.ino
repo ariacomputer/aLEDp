@@ -21,6 +21,8 @@
 int _keepAliveInterval = 2000;
 // Default color
 aLEDp_ColorSpecification _defaultColor;
+// The current input string buffer
+String _input_buffer = "";
 
 // LOOP STORAGE
 // Keep alive
@@ -29,6 +31,9 @@ unsigned long _lastKeepAlive = 0;
 // Arrays to store the LED information
 aLEDp_ColorSpecification _LEDs[NUM_LEDS];
 CRGB _FastLED[NUM_LEDS];
+
+// INTERNAL DEFINES
+
 
 // the setup function runs once when you press reset or power the board
 void setup() {
@@ -50,6 +55,7 @@ void setup() {
 
 // the loop function runs over and over again until power down or reset
 void loop() {
+	check_for_input();
 	check_keep_alive();
 }
 
@@ -60,7 +66,27 @@ void check_keep_alive() {
 	}
 }
 
-int set_led_color(int color_index, aLEDp_ColorSpecification color) {
+void check_for_input() {
+	if (Serial.available()) {
+		char ch = Serial.read();
+		// Parse if a carriage return comes through
+		if (ch == '\n') {
+			parse_input(_input_buffer);
+			_input_buffer = "";
+		}
+		// Add the input into the buffer
+		_input_buffer += (char)ch;
+	}
+}
+
+void parse_input(String *input) {
+
+}
+
+int set_led_color(
+	int color_index, 
+	aLEDp_ColorSpecification color
+) {
 	// Ensure the proper index
 	if (color_index < 0 || color_index >= NUM_LEDS) {
 		return 0;
@@ -76,8 +102,15 @@ int set_led_color(int color_index, aLEDp_ColorSpecification color) {
 		_FastLED[color_index].blue = color.blue();
 	}
 	// Since HSV is handled differently, we have to do a full color.
-	if (color.hue() != -1 && color.saturation() != -1 && color.brightness() != -1) {
-		_FastLED[color_index].setHSV(color.hue(), color.saturation(), color.brightness());
+	if (color.hue() != -1 && 
+		color.saturation() != -1 && 
+		color.brightness() != -1
+		) {
+			_FastLED[color_index].setHSV(
+				color.hue(), 
+				color.saturation(), 
+				color.brightness()
+			);
 	}
 
 	FastLED.show();
