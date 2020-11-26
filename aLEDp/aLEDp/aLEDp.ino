@@ -5,6 +5,8 @@
 */
 
 #include "aLEDp_ColorSpecification.h"
+// Added to disable the FastLED version number "pragma warning"
+#define FASTLED_INTERNAL
 #include <FastLED.h>
 
 // HARDWARE
@@ -77,7 +79,10 @@ void check_keep_alive() {
 void check_for_input() {
 	if (Serial.available()) {
 		char ch = Serial.read();
-		if (ch == 0x0d || ch == 0x0a || _input_buffer_pos > (INPUT_SIZE - 1)) {
+		if (	ch == 0x0d || 
+				ch == 0x0a ||
+				_input_buffer_pos > (INPUT_SIZE - 1)
+			) {
 			parse_input(_input);
 			_input = "";
 		}
@@ -122,12 +127,14 @@ void parse_input(String &s) {
 					state = PARSE_STATE_READ_VALUE;
 					// Translate A-Z to 1-26
 					reg_index = get_register_index(ch);
-					// The first register submitted is the command at register 0
+					// The first register submitted is the command
+					// at register 0
 					if (regs[0].equals("")) {
 						reg_index = 0;
 						regs[0] = ch;
 					}
-					// Otherwise, clear the existing value if any exists (for overwriting)
+					// Otherwise, clear the existing value if any exists
+					// (for overwriting)
 					else {
 						regs[reg_index] = "";
 					}
@@ -220,31 +227,45 @@ void run_command(String registers[]) {
 					if (registers[get_register_index('R')].length() > 0) {
 #ifndef NDEBUG
 						Serial.print("Setting red to:");
-						Serial.println(registers[get_register_index('R')].toInt());
+						Serial.println(registers[
+							get_register_index('R')
+						].toInt());
 #endif
-						color.red(registers[get_register_index('R')].toInt());
+						color.red(registers[
+							get_register_index('R')
+						].toInt());
 					}
 					// Green
 					if (registers[get_register_index('G')].length() > 0) {
 #ifndef NDEBUG
 						Serial.print("Setting green to:");
-						Serial.println(registers[get_register_index('G')].toInt());
+						Serial.println(registers[
+							get_register_index('G')
+						].toInt());
 #endif
-						color.green(registers[get_register_index('G')].toInt());
+						color.green(registers[
+							get_register_index('G')
+						].toInt());
 					}
 					// Blue
 					if (registers[get_register_index('B')].length() > 0) {
 #ifndef NDEBUG
 						Serial.print("Setting blue to:");
-						Serial.println(registers[get_register_index('B')].toInt());
+						Serial.println(registers[
+							get_register_index('B')
+						].toInt());
 #endif
-						color.blue(registers[get_register_index('B')].toInt());
+						color.blue(registers[
+							get_register_index('B')
+						].toInt());
 					}
 					// Hue
 					if (registers[get_register_index('H')].length() > 0) {
 #ifndef NDEBUG
 						Serial.print("Setting hue to:");
-						Serial.println(registers[get_register_index('H')].toInt());
+						Serial.println(registers[
+							get_register_index('H')
+						].toInt());
 #endif
 						color.hue(registers[get_register_index('H')].toInt());
 					}
@@ -252,32 +273,45 @@ void run_command(String registers[]) {
 					if (registers[get_register_index('S')].length() > 0) {
 #ifndef NDEBUG
 						Serial.print("Setting saturation to:");
-						Serial.println(registers[get_register_index('S')].toInt());
+						Serial.println(registers[
+							get_register_index('S')
+						].toInt());
 #endif
-						color.saturation(registers[get_register_index('S')].toInt());
+						color.saturation(registers[
+							get_register_index('S')
+						].toInt());
 					}
 					// Brightness
 #ifndef NDEBUG
 					Serial.print("Setting brightness to:");
-					Serial.println(registers[get_register_index('V')].toInt());
+					Serial.println(registers[
+						get_register_index('V')
+					].toInt());
 #endif
 					if (registers[get_register_index('V')].length() > 0) {
-						color.brightness(registers[get_register_index('V')].toInt());
+						color.brightness(registers[
+							get_register_index('V')
+						].toInt());
 					}
 					// First LED index
 					if (registers[get_register_index('F')].length() > 0) {
-						firstIndex = registers[get_register_index('F')].toInt();
+						firstIndex = registers[
+							get_register_index('F')
+						].toInt();
 						if (firstIndex < 0) {
-							error_report(SYNTAX_ERROR, "First LED must be >= 0");
+							error_report(SYNTAX_ERROR, 
+								"First LED must be >= 0");
 							break;
 						}
-						// Since we're doing this first, if it's defined, first assume that
-						// it's only specifying one LED.
+						// Since we're doing this first, if it's defined,
+						// first assume that it's only specifying one LED.
 						lastIndex = firstIndex;
 					}
 					// Last LED index
 					if (registers[get_register_index('L')].length() > 0) {
-						lastIndex = registers[get_register_index('L')].toInt();
+						lastIndex = registers[
+							get_register_index('L')
+						].toInt();
 						if (lastIndex >= NUM_LEDS) {
 							String err = "Last LED must be <";
 							err.concat(NUM_LEDS);
@@ -285,7 +319,8 @@ void run_command(String registers[]) {
 							break;
 						}
 						if (lastIndex < firstIndex) {
-							error_report(SYNTAX_ERROR, "Last LED must be before first LED");
+							error_report(SYNTAX_ERROR, 
+								"Last LED must be before first LED");
 						}
 					}
 
