@@ -57,10 +57,8 @@ void setup() {
 		set_led_color(x, _defaultColor);
 	}
 	// Open serial port
-#ifndef NDEBUG
 	Serial.begin(115200);
 	Serial.println("ok aLEDp READY.");
-#endif
 }
 
 // the loop function runs over and over again until power down or reset
@@ -195,7 +193,7 @@ void parse_input(String &s) {
 void run_command(String registers[]) {
 	// Register 0 is the command
 	// TODO: Find a char way
-#ifndef NDEBUG
+#ifdef _DEBUG
 	Serial.println(registers[0].substring(0, 1));
 #endif
 	char prefix = registers[0].charAt(0);
@@ -204,7 +202,7 @@ void run_command(String registers[]) {
 		prefix -= 32;
 	}
 	int suffix = registers[0].substring(1).toInt();
-#ifndef NDEBUG
+#ifdef _DEBUG
 	Serial.print("Pre:");
 	Serial.println(prefix);
 	Serial.print("Suf:");
@@ -217,7 +215,7 @@ void run_command(String registers[]) {
 			switch (suffix) {
 				// A1: Set Color
 				case 1:
-#ifndef NDEBUG
+#ifdef _DEBUG
 					Serial.println("Setting color!");
 #endif
 					aLEDp_ColorSpecification color;
@@ -225,7 +223,7 @@ void run_command(String registers[]) {
 					int lastIndex = NUM_LEDS - 1;
 					// Red
 					if (registers[get_register_index('R')].length() > 0) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 						Serial.print("Setting red to:");
 						Serial.println(registers[
 							get_register_index('R')
@@ -237,7 +235,7 @@ void run_command(String registers[]) {
 					}
 					// Green
 					if (registers[get_register_index('G')].length() > 0) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 						Serial.print("Setting green to:");
 						Serial.println(registers[
 							get_register_index('G')
@@ -249,7 +247,7 @@ void run_command(String registers[]) {
 					}
 					// Blue
 					if (registers[get_register_index('B')].length() > 0) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 						Serial.print("Setting blue to:");
 						Serial.println(registers[
 							get_register_index('B')
@@ -261,7 +259,7 @@ void run_command(String registers[]) {
 					}
 					// Hue
 					if (registers[get_register_index('H')].length() > 0) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 						Serial.print("Setting hue to:");
 						Serial.println(registers[
 							get_register_index('H')
@@ -271,7 +269,7 @@ void run_command(String registers[]) {
 					}
 					// Saturation
 					if (registers[get_register_index('S')].length() > 0) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 						Serial.print("Setting saturation to:");
 						Serial.println(registers[
 							get_register_index('S')
@@ -282,7 +280,7 @@ void run_command(String registers[]) {
 						].toInt());
 					}
 					// Brightness
-#ifndef NDEBUG
+#ifdef _DEBUG
 					Serial.print("Setting brightness to:");
 					Serial.println(registers[
 						get_register_index('V')
@@ -329,6 +327,7 @@ void run_command(String registers[]) {
 						set_led_color(l, color);
 					}
 
+					ok_report("A1");
 					break;
 				default: 
 					error_report(SYNTAX_ERROR, "Command does not exist");
@@ -369,7 +368,7 @@ void error_report(int type, String description) {
 	Serial.println(description);
 }
 
-void ok_report(String description = "") {
+void ok_report(String description) {
 	Serial.print("ok:");
 	Serial.println(description);
 }
@@ -384,21 +383,21 @@ int set_led_color(
 	}
 	// TODO: Implement proper HSV and RGB controls
 	if (color.red() != -1) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 		Serial.print("Changing red to ");
 		Serial.println(color.red());
 #endif
 		_FastLED[led_index].red = color.red();
 	}
 	if (color.green() != -1) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 		Serial.print("Changing green to ");
 		Serial.println(color.green());
 #endif
 		_FastLED[led_index].green = color.green();
 	}
 	if (color.blue() != -1) {
-#ifndef NDEBUG
+#ifdef _DEBUG
 		Serial.print("Changing blue to ");
 		Serial.println(color.blue());
 #endif
