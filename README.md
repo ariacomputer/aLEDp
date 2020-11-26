@@ -47,13 +47,13 @@ In general, only RGB or HSV changes make sense; specifying HTML via X will eithe
 `A2 V+20`  
 
 ### LED Groups
-You can specify the *start* (**S**) and *ending* (**E**) indexes of LEDs to be affected by a certain command.  
+You can specify the *first* (**F**) and *last* (**L**) indexes of LEDs to be affected by a certain command.  
 
 In general:  
-* If only S is specified, *only* the LED at index S is affected.
-* If only E is specified, *all* LEDs *up to and including* the LED at index E is affected.
-* If neither S or E is specified, *all* LEDs are affected.
-* If S is greater than E, a warning is echoed and the values treated in reverse (E to S).  This can lead to unexpected results for any commands with gradual changes to multiple LEDs.
+* If only F is specified, *only* the LED at index S is affected.
+* If only L is specified, *all* LEDs *up to and including* the LED at index L is affected.
+* If neither F nor L is specified, *all* LEDs are affected.
+* If F is greater than L, a warning is echoed and the values treated in reverse (L to F).  This can lead to unexpected results for any commands with gradual changes to multiple LEDs.
 
 ---
 
@@ -97,7 +97,7 @@ Set the color of a specific LED or group of LEDs.
 
 ***Variables***  
 [Color Specification](#markdown-header-color-specification): RGB/HSV/HTML  
-[LED Groups](#markdown-header-led-groups): S to E
+[LED Groups](#markdown-header-led-groups): F to L
 
 ***Notes***
 * If settings from multiple color specifications are specified, they will be applied in the order listed above.
@@ -105,7 +105,7 @@ Set the color of a specific LED or group of LEDs.
 
 ***Examples***  
 `A1 X00FF00 ; Set all LEDs to green`  
-`A1 S2 E12 R255 G192 B203 ; Set LEDs 2 thru 12 to pink`  
+`A1 F2 L12 R255 G192 B203 ; Set LEDs 2 thru 12 to pink`  
 `A1 E4 H0 S255 V255; Set first five LEDs (0-4) to red`  
 
 ---
@@ -116,7 +116,7 @@ Modify the existing color by math translation of the existing colors on specific
 
 ***Variables***  
 [Color Translation](#markdown-header-color-translation): RGB or HSV  
-[LED Groups](#markdown-header-led-groups): S to E
+[LED Groups](#markdown-header-led-groups): F to L
 
 ***Notes***   
 * If settings from multiple color specifications are specified, they will be applied in the order listed above.
